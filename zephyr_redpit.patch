@@ -1,0 +1,65 @@
+diff --git a/boards/digilent/zybo/zybo-pinctrl.dtsi b/boards/digilent/zybo/zybo-pinctrl.dtsi
+index a55aafd47c9..497c2f3a53c 100644
+--- a/boards/digilent/zybo/zybo-pinctrl.dtsi
++++ b/boards/digilent/zybo/zybo-pinctrl.dtsi
+@@ -7,25 +7,25 @@
+ #include <zephyr/dt-bindings/pinctrl/pinctrl-zynq.h>
+ 
+ &pinctrl0 {
+-	pinctrl_uart1_default: uart1-default {
++	pinctrl_uart0_default: uart0-default {
+ 		mux {
+-			groups = "uart1_10_grp";
+-			function = "uart1";
++			groups = "uart0_1_grp";
++			function = "uart0";
+ 		};
+ 
+ 		conf {
+-			groups = "uart1_10_grp";
++			groups = "uart0_1_grp";
+ 			slew-rate = <IO_SPEED_SLOW>;
+-			power-source = <IO_STANDARD_LVCMOS18>;
++			power-source = <IO_STANDARD_LVCMOS33>;
+ 		};
+ 
+ 		conf-rx {
+-			pins = "MIO49";
++			pins = "MIO14";
+ 			bias-high-impedance;
+ 		};
+ 
+ 		conf-tx {
+-			pins = "MIO48";
++			pins = "MIO15";
+ 			bias-disable;
+ 		};
+ 	};
+diff --git a/boards/digilent/zybo/zybo.dts b/boards/digilent/zybo/zybo.dts
+index 8f3c1242679..b7ce9625572 100644
+--- a/boards/digilent/zybo/zybo.dts
++++ b/boards/digilent/zybo/zybo.dts
+@@ -20,8 +20,8 @@
+ 
+ 	chosen {
+ 		zephyr,sram = &sram0;
+-		zephyr,console = &uart1;
+-		zephyr,shell-uart = &uart1;
++		zephyr,console = &uart0;
++		zephyr,shell-uart = &uart0;
+ 		zephyr,ocm = &ocm_high;
+ 	};
+ 
+@@ -79,11 +79,11 @@
+ 	};
+ };
+ 
+-&uart1 {
++&uart0 {
+ 	status = "okay";
+ 	current-speed = <115200>;
+ 	clock-frequency = <100000000>;
+-	pinctrl-0 = <&pinctrl_uart1_default>;
++	pinctrl-0 = <&pinctrl_uart0_default>;
+ 	pinctrl-names = "default";
+ };
