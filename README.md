@@ -60,7 +60,6 @@ to launch the program. The terminal will display
 Importing environment from mmc ...                                              
 Checking if uenvcmd is set ...                                                  
 Hit any key to stop autoboot:  0                                                
-Zynq> setenv autostart yes                                                      
 Zynq> dcache off                                                                
 Zynq> fatload mmc 0 0x0 zephyr_led.bin                                          
 41120 bytes read in 25 ms (1.6 MiB/s)                                           
