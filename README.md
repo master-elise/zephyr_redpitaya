@@ -77,3 +77,25 @@ LED state: OFF
 ...
 ```
 and the red LED will be blinking.
+
+## Dining philosopher solution
+
+As described at https://github.com/zephyrproject-rtos/zephyr/tree/main/samples/philosophers, the use 
+of the ZephyrOS scheduler for solving the dining philosophers is demonstrated with
+```
+west build --pristine -b zybo zephyr/samples/philosophers/
+```
+but despite compiling with the proposed minimal ZephyrOS updates, the successful execution requires
+```
+west update
+```
+to download all (9 GB) modules: I have not identified which module is needed 
+(``west update cmsis_6 openthread picolibc`` is not enough). Upon execution:
+```
+Philosopher 0 [P: 3]        STARVING       
+Philosopher 1 [P: 2]  THINKING [  325 ms ] 
+Philosopher 2 [P: 1]  THINKING [  325 ms ] 
+Philosopher 3 [P: 0]   EATING  [  725 ms ] 
+Philosopher 4 [C:-1]  THINKING [  100 ms ] 
+Philosopher 5 [C:-2]   EATING  [  275 ms ] 
+```
