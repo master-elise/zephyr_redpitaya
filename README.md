@@ -99,3 +99,13 @@ Philosopher 3 [P: 0]   EATING  [  725 ms ]
 Philosopher 4 [C:-1]  THINKING [  100 ms ] 
 Philosopher 5 [C:-2]   EATING  [  275 ms ] 
 ```
+
+**TODO: identify which packages are mandatory to obtain a functional executable (and not just being able
+to compile a binary that will not execute)**
+
+Note:
+```
+west build --pristine -b zybo /home/jmfriedt/ZephyrOS/zephyr/samples/philosophers/
+```
+does not require write access to the directory in which ZephyrOS is stored since the ``build`` output is
+generated in the working directory.
