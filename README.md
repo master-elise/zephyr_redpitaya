@@ -2,7 +2,7 @@
 
 ## Patching Zephyr for the Red Pitaya
 
-ZephyrOS supports the Zybo, a <a href="https://digilent.com/reference/programmable-logic/zybo-z7/reference-manual">Zynq-based evaluation board</a>. According
+<a href="https://zephyrproject.org/">ZephyrOS</a> supports the Zybo, a <a href="https://digilent.com/reference/programmable-logic/zybo-z7/reference-manual">Zynq-based evaluation board</a>. According
 to the pinout, its bank 0/pin 7 is connected to LED4, which also happens to
 be the red PS-accessible MIO pin on the Red Pitaya. Hence, the devicetree
 entry ``zephyr/boards/digilent/zybo/zybo.dts`` stating ``gpios = <&psgpio_bank0 7 GPIO_ACTIVE_HIGH>;`` remains valid.
