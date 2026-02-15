@@ -5,9 +5,13 @@
 <a href="https://zephyrproject.org/">ZephyrOS</a> supports the Zybo, a <a href="https://digilent.com/reference/programmable-logic/zybo-z7/reference-manual">Zynq-based evaluation board</a>. According
 to the pinout, its bank 0/pin 7 is connected to LED4, which also happens to
 be the red PS-accessible MIO pin on the Red Pitaya. Hence, the devicetree
-entry ``zephyr/boards/digilent/zybo/zybo.dts`` stating ``gpios = <&psgpio_bank0 7 GPIO_ACTIVE_HIGH>;`` remains valid.
+entry ``zephyr/boards/digilent/zybo/zybo.dts`` stating 
+```
+gpios = <&psgpio_bank0 7 GPIO_ACTIVE_HIGH>;
+```
+remains valid.
 
-However, the Zibo communicates over UART1 whereas the USB-microB port is
+However, the Zybo communicates over UART1 whereas the USB-microB port is
 connected to UART0 of the Zynq on the Red Pitaya. Gwenhael Goavec-Merou
 provides the <a href="zephyr_redpit.patch">following patch</a> to change
 the communication port: apply with ``patch -p1 < zephyr_redpit.patch`` from
