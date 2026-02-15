@@ -19,7 +19,7 @@ ZephyrOS annoyingly fetches all BSPs when installing with
 ```
 pip install west --break-system-packages
 west init
-west update
+west update cmsis # DO NOT "west update" which will download 9 GB of useless BSPs
 ```
 so at least we save a bit of space by using the distribution (Debian) provided
 cross-compiler instead of the one provided by ZephyrOS. At the end of
