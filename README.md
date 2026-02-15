@@ -15,7 +15,8 @@ the ``zephyr`` directory.
 
 ## Compiling ZephyrOS on the Red Pitaya
 
-ZephyrOS annoyingly fetches all BSPs when installing with
+ZephyrOS ~~annoyingly fetches all BSPs~~ only fetches the necessary CMSIS
+library needed for this demonstration when installing with
 ```
 pip install west --break-system-packages
 west init
