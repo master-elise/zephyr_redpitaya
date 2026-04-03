@@ -50,7 +50,7 @@ having to generate a ``ps7_init`` startup file, then compile the Zephyr blinking
 ```
 west build -b zybo  zephyr/samples/basic/blinky
 ```
-and copy the resulting ``cp build/zephyr/zephyr.bin /mnt/sdb1/zephyr_led.bin``
+and copy the resulting ``cp build/zephyr/zephyr.bin /mnt/zephyr_led.bin``
 on the first partition of the SD card.
 
 Launch the Red Pitaya and stop the automatic boot sequence of U-Boot, then type
