@@ -45,8 +45,8 @@ is to be used, source this configuration file with
 ## Running ZephyrOS on the Red Pitaya
 
 Assuming a <a href="https://github.com/trabucayre/redpitaya">Buildroot</a> SD
-card for the Red Pitaya is available which already provides U-Boot support, 
-then compile the Zephyr blinking LED example with
+card for the Red Pitaya is available which already provides U-Boot support avoids
+having to generate a ``ps7_init`` startup file, then compile the Zephyr blinking LED example with
 ```
 west build -b zybo  zephyr/samples/basic/blinky
 ```
