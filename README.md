@@ -117,6 +117,19 @@ generated in the working directory.
 
 ## Running from CPU1 (not working (yet), work in progress)
 
+When launching the Zybo binary generated with the unmodified ZephyrOS communicating over UART1,
+then an additional UART to USB converted is used:
+
+<img src="pictures/Image4995525295326700740.jpg">
+
+with two ``minicom`` showing access to the UART0 (U-Boot, right) and Zephyr (left).
+
+<img src="pictures/2026-04-03-153246_2944x1080_scrot.png">
+
+However, both a still running on the same core CPU0, so that U-Boot has been stopped by the
+execution of ZephyrOS. The objective is to execute ZephyrOS on CPU1 instead of CPU0 so that
+the latter is free to execute Linux.
+
 ```
 dcache off
 fatload mmc 0 0x200000 zephyr_led.bin
