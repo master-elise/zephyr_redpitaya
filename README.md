@@ -1,5 +1,10 @@
 # ZephyrOS on the Zynq 7010 of the Red Pitaya
 
+Dependencies on Debian GNU/Linux
+```
+sudo apt install golang-github-invopop-jsonschema-dev python3-jsonschema device-tree-compiler ninja-build python3-pyelftools
+```
+
 ## Patching Zephyr for the Red Pitaya
 
 <a href="https://zephyrproject.org/">ZephyrOS</a> supports the Zybo, a <a href="https://digilent.com/reference/programmable-logic/zybo-z7/reference-manual">Zynq-based evaluation board</a>. According
@@ -50,37 +55,37 @@ on the first partition of the SD card.
 
 Launch the Red Pitaya and stop the automatic boot sequence of U-Boot, then type
 ```
-dcache off                                                                
-fatload mmc 0 0x0 zephyr_led.bin                                          
-dcache flush                                                              
-go 0x0                                                                    
+dcache off
+fatload mmc 0 0x0 zephyr_led.bin
+dcache flush
+go 0x0
 ```
 to launch the program. The terminal will display
 ```
-Importing environment from mmc ...                                              
-Checking if uenvcmd is set ...                                                  
-Hit any key to stop autoboot:  0                                                
-Zynq> dcache off                                                                
-Zynq> fatload mmc 0 0x0 zephyr_led.bin                                          
-41120 bytes read in 25 ms (1.6 MiB/s)                                           
-Zynq> dcache flush                                                              
-Zynq> go 0x0                                                                    
-## Starting application at 0x00000000 ...                                       
-*** Booting Zephyr OS build 1b23efc6121e ***                                    
-LED state: OFF                                                                  
-LED state: ON                                                                   
-LED state: OFF                                                                  
-LED state: ON                                                                   
-LED state: OFF                                                                  
-LED state: ON                                                                   
-LED state: OFF                                                                  
+Importing environment from mmc ...
+Checking if uenvcmd is set ...
+Hit any key to stop autoboot:  0
+Zynq> dcache off
+Zynq> fatload mmc 0 0x0 zephyr_led.bin                       
+41120 bytes read in 25 ms (1.6 MiB/s)                        
+Zynq> dcache flush                                           
+Zynq> go 0x0                                                 
+## Starting application at 0x00000000 ...                    
+*** Booting Zephyr OS build 1b23efc6121e ***                 
+LED state: OFF                                               
+LED state: ON                                                
+LED state: OFF                                               
+LED state: ON                                                
+LED state: OFF                                               
+LED state: ON                                                
+LED state: OFF                                               
 ...
 ```
 and the red LED will be blinking.
 
 ## Dining philosopher solution
 
-As described at https://github.com/zephyrproject-rtos/zephyr/tree/main/samples/philosophers, the use 
+As described at https://github.com/zephyrproject-rtos/zephyr/tree/main/samples/philosophers, the use
 of the ZephyrOS scheduler for solving the dining philosophers is demonstrated with
 ```
 west build --pristine -b zybo zephyr/samples/philosophers/
@@ -89,15 +94,15 @@ but despite compiling with the proposed minimal ZephyrOS updates, the successful
 ```
 west update
 ```
-to download all (9 GB) modules: I have not identified which module is needed 
+to download all (9 GB) modules: I have not identified which module is needed
 (``west update cmsis_6 openthread picolibc`` is not enough). Upon execution:
 ```
-Philosopher 0 [P: 3]        STARVING       
-Philosopher 1 [P: 2]  THINKING [  325 ms ] 
-Philosopher 2 [P: 1]  THINKING [  325 ms ] 
-Philosopher 3 [P: 0]   EATING  [  725 ms ] 
-Philosopher 4 [C:-1]  THINKING [  100 ms ] 
-Philosopher 5 [C:-2]   EATING  [  275 ms ] 
+Philosopher 0 [P: 3]        STARVING
+Philosopher 1 [P: 2]  THINKING [  325 ms ]
+Philosopher 2 [P: 1]  THINKING [  325 ms ]
+Philosopher 3 [P: 0]   EATING  [  725 ms ]
+Philosopher 4 [C:-1]  THINKING [  100 ms ]
+Philosopher 5 [C:-2]   EATING  [  275 ms ]
 ```
 
 **TODO: identify which packages are mandatory to obtain a functional executable (and not just being able
@@ -109,3 +114,15 @@ west build --pristine -b zybo /home/jmfriedt/ZephyrOS/zephyr/samples/philosopher
 ```
 does not require write access to the directory in which ZephyrOS is stored since the ``build`` output is
 generated in the working directory.
+
+## Running from CPU1 (not working (yet), work in progress)
+
+```
+dcache off
+fatload mmc 0 0x200000 zephyr_led.bin
+dcache flush
+mw.l 0xF8000008 0xDF0D
+mw.l 0xF8000248 0x200000
+mw.l 0xF8000244 0x0
+mw.l 0xF8000004 0x767B
+```
