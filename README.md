@@ -122,20 +122,58 @@ then an additional UART to USB converted is used:
 
 <img src="pictures/Image4995525295326700740.jpg">
 
-with two ``minicom`` showing access to the UART0 (U-Boot, right) and Zephyr (left).
+with two ``minicom`` showing access to the UART0 (U-Boot stopped, right) and running Zephyr (left).
 
 <img src="pictures/2026-04-03-153246_2944x1080_scrot.png">
 
-However, both a still running on the same core CPU0, so that U-Boot has been stopped by the
+However, both are still running on the same core CPU0, so that U-Boot has been stopped by the
 execution of ZephyrOS. The objective is to execute ZephyrOS on CPU1 instead of CPU0 so that
 the latter is free to execute Linux.
 
+Abderraouf Messaoudi proposes to load the Zephyr binary and overwrite the first opcodes
+(probably where the reset handler and software interrupt vector are located) with the SEV 
+instruction to wakeup CPU1 after loading the program to an address space
+allocated to this CPU and leaving enough space for Linux:
+
 ```
 dcache off
-fatload mmc 0 0x200000 zephyr_led.bin
+fatload mmc 0x10000000 zephyr.bin
 dcache flush
-mw.l 0xF8000008 0xDF0D
-mw.l 0xF8000248 0x200000
-mw.l 0xF8000244 0x0
-mw.l 0xF8000004 0x767B
+mw.l 0xFFFFFFF0 0x10000000
+mw.l 0x01000000 0xE320F004
+mw.l 0x01000004 0xE12FFF1E
+dcache flush
+go 0x01000000
 ```
+
+where 0xFFFFFFF0 holds the address of the first instruction executed by CPU1 (i.e. beginning
+of zephyr.bin) and the opcodes are disassembled as
+```
+E3 20 F0 04    sev
+E1 2F FF 1E    bx  lr
+```
+
+The matching ZephyrOS configuration requires defining the allocated memory region to the
+same space, so that Zephyr's devicetree in ``boards/digilent/zybo/zybo.dts`` replaces 
+the ``sram0`` node with
+```
+sram0: memory@10000000 {
+compatible = "mmio-sram";
+reg = <0x10000000 0x2000000>;
+};
+```
+For the dining philosophers problem enable ``CONFIG_STDOUT_CONSOLE=y`` in 
+``samples/philosophers/prj.conf``.
+
+This will execute ZephyrOS on CPU1 as demonstrated with the prompt of U-Boot still
+active on CPU0, but loading Linux with
+```
+setenv bootargs 'console=ttyPS0,115200 root=/dev/mmcblk0p2 rw rootwait earlyprintk maxcpus=1 nosmp nohlt mem=256M'
+fatload mmc 0 0x2080000 zImage
+fatload mmc 0 0x2000000 system.dtb
+bootz 0x2080000 - 0x2000000
+```
+stops the execution of Zephyr on CPU1 while GNU/Linux is running on CPU0, even after
+switching the state if ``cpu1`` to ``disabled`` in the Linux devicetree.
+
+Work in progress...
